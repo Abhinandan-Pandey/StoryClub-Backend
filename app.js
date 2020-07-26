@@ -8,7 +8,6 @@ const mongoose = require("mongoose");
 const usersRoutes = require("./routes/users-routes");
 const storiesRoutes = require("./routes/stories-routes");
 const HttpError = require("./models/http-error");
-const User = require("./models/user");
 
 const app = express();
 
@@ -26,14 +25,7 @@ app.use((req, res, next) => {
 
   next();
 });
-app.use((req, res, next) => {
-  User.findById("5f1b1c239d1e920b4c474c5e")
-    .then((user) => {
-      req.user = user;
-      next();
-    })
-    .catch((err) => console.log(err));
-});
+
 app.use("/users", usersRoutes);
 app.use("/stories", storiesRoutes);
 
