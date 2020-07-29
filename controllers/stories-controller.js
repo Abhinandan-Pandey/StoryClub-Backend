@@ -5,7 +5,7 @@ const HttpError = require("../models/http-error");
 const Story = require("../models/story");
 const User = require("../models/user");
 
-const getPublicStories = async (req, res, id) => {
+const getPublicStories = async (req, res, next) => {
   let stories;
   try {
     stories = await Story.find();
@@ -16,11 +16,11 @@ const getPublicStories = async (req, res, id) => {
     );
     return next(error);
   }
-
-  if (stories.length === 0) {
-    const error = new HttpError("No Post Found.", 404);
-    return next(error);
-  }
+  // console.log(stories, "stories");
+  // if (stories.length === 0) {
+  //   const error = new HttpError("No Post Found.", 404);
+  //   return next(error);
+  // }
   const publicStories = stories.filter((story) => {
     // console.log(story.privacy);
     return story.privacy !== true;
@@ -158,7 +158,7 @@ const deleteStrory = async (req, res, next) => {
     );
     return next(error);
   }
-  res.status(200).json({ message: "deleted Story" });
+  res.status(200).json({ message: "deleted Story", storyId });
 };
 
 exports.getPublicStories = getPublicStories;

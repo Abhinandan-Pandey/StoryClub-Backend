@@ -13,7 +13,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.use("uploadedImages", express.static(path.join("uploadedImages")));
+app.use("/uploadedImages", express.static(path.join("uploadedImages")));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
