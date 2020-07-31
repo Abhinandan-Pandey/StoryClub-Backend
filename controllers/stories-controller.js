@@ -85,7 +85,7 @@ const editStory = async (req, res, next) => {
   }
   const { title, body, privacy } = req.body;
   const storyId = req.params.sid;
-  console.log(req.body.title, body, privacy, "data");
+  // console.log(req.body.title, body, privacy, "data");
   let editedStory;
   try {
     editedStory = await Story.findById(storyId);
