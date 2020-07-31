@@ -6,17 +6,17 @@ const checkAuth = require("../middleware/checkAuth");
 
 const router = express.Router();
 
-// router.use(checkAuth);
+router.use(checkAuth);
 
 router.get("/", storyController.getPublicStories);
 router.post(
   "/",
-  [check("title").trim().notEmpty(), check("body").trim().isLength({ min: 6 })],
+  [check("title").trim().notEmpty(), check("body").trim().notEmpty()],
   storyController.postStory
 );
 router.patch(
   "/:sid",
-  [check("title").not().isEmpty(), check("body").isLength({ min: 6 })],
+  [check("title").not().isEmpty(), check("body").trim().notEmpty()],
   storyController.editStory
 );
 router.delete("/:sid", storyController.deleteStrory);

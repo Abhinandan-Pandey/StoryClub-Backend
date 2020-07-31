@@ -8,13 +8,12 @@ const mongoose = require("mongoose");
 const usersRoutes = require("./routes/users-routes");
 const storiesRoutes = require("./routes/stories-routes");
 const HttpError = require("./models/http-error");
-const User = require("./models/user");
 
 const app = express();
 
 app.use(bodyParser.json());
 
-app.use("uploadedImages", express.static(path.join("uploadedImages")));
+app.use("/uploadedImages", express.static(path.join("uploadedImages")));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -26,14 +25,7 @@ app.use((req, res, next) => {
 
   next();
 });
-app.use((req, res, next) => {
-  User.findById("5f1b1c239d1e920b4c474c5e")
-    .then((user) => {
-      req.user = user;
-      next();
-    })
-    .catch((err) => console.log(err));
-});
+
 app.use("/users", usersRoutes);
 app.use("/stories", storiesRoutes);
 
@@ -57,7 +49,7 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    "mongodb+srv://Abhinandan-Pandey:annupam1997@cluster0-iglwv.mongodb.net/StoryClub?retryWrites=true&w=majority"
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0-iglwv.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
   )
   .then(() => {
     app.listen(4000);

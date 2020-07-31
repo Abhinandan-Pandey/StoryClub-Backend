@@ -1,0 +1,8 @@
+{
+  "env": {
+    "DB_USER": "Abhinandan-Pandey",
+    "DB_PASSWORD": "annupam1997",
+    "DB_NAME": "StoryClub",
+    "JWT_KEY": "secret_token"
+  }
+}

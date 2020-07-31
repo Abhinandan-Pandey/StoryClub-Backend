@@ -7,18 +7,19 @@ const fileUpload = require("../middleware/fileUpload");
 
 const router = express.Router();
 
-// router.use(chekAuth);
-
 router.post("/login", userController.login);
 router.post(
   "/signup",
   [
-    check("UserName").notEmpty(),
+    check("userName").not().isEmpty(),
     check("email").normalizeEmail().isEmail(),
     check("password").isLength({ min: 6 }),
   ],
   userController.signup
 );
+
+router.use(chekAuth);
+
 router.get("/:uid", userController.getUserProfile);
 router.patch(
   "/:uid",
@@ -29,6 +30,10 @@ router.patch(
   ],
   userController.editUserProfile
 );
-// router.patch('/imagesURL',userController);
+router.patch(
+  "/images/:uid",
+  fileUpload.single("image"),
+  userController.imageUpload
+);
 
 module.exports = router;

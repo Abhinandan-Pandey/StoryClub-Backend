@@ -50,7 +50,7 @@ const editUserProfile = async (req, res, next) => {
     );
     return next(error);
   }
-  console.log(editedUser);
+  // console.log(editedUser);
 
   if (editedUser._id.toString() !== req.user._id.toString()) {
     // console.log(typeof editedStory.userId.toString(), typeof req.user._id);
@@ -115,7 +115,7 @@ const login = async (req, res, next) => {
   try {
     token = jwt.sign(
       { _id: existingUser._id, userName: existingUser.userName },
-      "secret_token",
+      process.env.JWT_KEY,
       { expiresIn: "1h" }
     );
   } catch (err) {
@@ -173,7 +173,6 @@ const signup = async (req, res, next) => {
     imageUrl: "",
     stories: [],
   });
-
   try {
     await createdUser.save();
   } catch (err) {
@@ -185,9 +184,9 @@ const signup = async (req, res, next) => {
   }
   let token;
   try {
-    await jwt.sign(
+    token = await jwt.sign(
       { _id: createdUser._id, userName: userName },
-      "secret_token",
+      process.env.JWT_KEY,
       {
         expiresIn: "1h",
       }
@@ -206,7 +205,31 @@ const signup = async (req, res, next) => {
   });
 };
 
+const imageUpload = async (req, res, next) => {
+  const userId = req.params.uid;
+  let user;
+  // console.log(req.file.path.replace(/\\/gi, "/"));
+  try {
+    user = await User.findById(userId);
+    // console.log(user);
+  } catch (err) {
+    // console.log(err.response, req.file.path);
+    const error = new HttpError(" upload failed, please try again later.", 500);
+    return next(error);
+  }
+  user.imageUrl = req.file.path.replace(/\\/gi, "/");
+  try {
+    await user.save();
+  } catch (err) {
+    // console.log(err.response, req.file);
+    const error = new HttpError(" upload failed, please try again later.", 500);
+    return next(error);
+  }
+  res.json({ user });
+};
+
 exports.getUserProfile = getUserProfile;
 exports.editUserProfile = editUserProfile;
 exports.login = login;
 exports.signup = signup;
+exports.imageUpload = imageUpload;
